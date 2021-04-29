@@ -135,7 +135,7 @@ app.post('/api/upload', function (req, res) {
             alerts = []
 
             urls.forEach(url => {
-                alerts.push({type: "success", text: `Your image has been uploaded <a target="_blank" href="https://imgs.pastebin.fi${url}">https://imgs.pastebin.fi${url}</a>`})
+                alerts.push({type: "success", text: `Your image has been uploaded <a target="_blank" href="https://img.pastebin.fi${url}">https://img.pastebin.fi${url}</a>`})
             });
 
             res.render('index', {
