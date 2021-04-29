@@ -9,6 +9,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://hcaptcha.com/1/api.js" async defer></script>
     </head>
 <body>
 
@@ -26,7 +27,9 @@
             <label for="pwd">Password:</label>
             <input type="password" class="form-control" name="password" placeholder="Enter password" id="pwd">
         </div>
-        <b>HCaptcha</b>
+        <br>
+        <div class="h-captcha" data-sitekey="d88ef213-634a-469c-8cb8-4ed9bcabcbb6"></div>
+        <hr>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
 </body>

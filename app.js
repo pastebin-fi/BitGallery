@@ -6,9 +6,12 @@ const { Sequelize, Model, DataTypes } = require("sequelize");
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const session = require('express-session')
+const cors = require('cors');
+const hcaptcha = require('express-hcaptcha');
 
+const SECRET = process.env.HCAPTCHA_SECRET_KEY;
 const app = express()
-const port = 8989
+const port =  process.env.PORT || 8989
 const saltRounds = 10;
 
 const sequelize = new Sequelize('sqlite::memory:') 
@@ -35,7 +38,7 @@ app.set('view engine', 'ejs');
 app.use('/i', express.static('images'))
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true })); 
-
+app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
     if (req.session.username) {
@@ -88,7 +91,7 @@ app.post('/login', async function (req, res) {
     }
 });
 
-app.post('/register', function (req, res) {
+app.post('/register', hcaptcha.middleware.validate(SECRET), function (req, res) {
     if (req.session.username) {
         res.redirect('/')
     } else { 
