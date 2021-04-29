@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const session = require('express-session')
 const cors = require('cors');
-const hcaptcha = require('express-hcaptcha');
+const {verify} = require('hcaptcha');
 
 const SECRET = process.env.HCAPTCHA_SECRET_KEY;
 const app = express()
@@ -91,26 +91,51 @@ app.post('/login', async function (req, res) {
     }
 });
 
-app.post('/register', hcaptcha.middleware.validate(SECRET), function (req, res) {
+app.post('/register', function (req, res) {
     if (req.session.username) {
         res.redirect('/')
     } else { 
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(req.body.password, salt, async function(err, hash) {
-                await User.create({
-                    username: req.body.username,
-                    password: hash
-                });
-                res.render('login',  { 
+        console.log(req.body)
+        if (req["body"]["h-captcha-response"]) {
+            verify(SECRET, req["body"]["h-captcha-response"])
+            .then(() => {
+                bcrypt.genSalt(saltRounds, function(err, salt) {
+                    bcrypt.hash(req.body.password, salt, async function(err, hash) {
+                        await User.create({
+                            username: req.body.username,
+                            password: hash
+                        });
+                        res.render('login',  { 
+                            alerts: [
+                                {
+                                    text: "Your account has been created. You can login below.",
+                                    type: "success"
+                                }
+                            ]
+                        });
+                    });
+                });        
+            })
+            .catch(() => {
+                res.render('register',  { 
                     alerts: [
                         {
-                            text: "Your account has been created. You can login below.",
-                            type: "success"
+                            text: "hCaptcha failed.",
+                            type: "warning"
                         }
                     ]
                 });
             });
-        });
+        } else {
+            res.render('register',  { 
+                alerts: [
+                    {
+                        text: "hCaptcha failed.",
+                        type: "warning"
+                    }
+                ]
+            });
+        }
     }
 });
 
