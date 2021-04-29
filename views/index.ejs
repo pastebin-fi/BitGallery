@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>BitGallery</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    </head>
+<body>
+
+    <%- include('header') %>
+
+    <div class="jumbotron text-center">
+        <h1>BitGallery</h1>
+        <p>Simple image sharing service.</p> 
+    </div>
+
+    <%- include('alerts') %>
+
+    <% if (typeof username !== 'undefined') { %>
+        <div class="container">
+            <form method="POST" action="/api/upload?info=1" enctype="multipart/form-data">
+                <input class="form-control form-control-lg" multiple name="fileInput" id="fileInput" type="file">
+                <input class="btn btn-primary mb-2" type="submit" value="Upload">
+            </form>
+        </div>
+    <% } %>
+
+</body>
+</html>

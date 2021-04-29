@@ -1,0 +1,13 @@
+<% if (typeof alerts !== 'undefined') { %>
+    <%if (alerts.length > 0) { %>
+        <div class="container">
+            <% for(let i=0; i < alerts.length; i++) { %>
+                <div class="alert alert-<%= alerts[i].type %> alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <%- alerts[i].text %>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+<% } %>
+
