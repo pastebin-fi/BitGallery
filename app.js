@@ -17,11 +17,16 @@ if (process.env.HCAPTCHA_SECRET_KEY != "") {
     const SECRET = process.env.HCAPTCHA_SECRET_KEY;
 
     hcaptchaEnabled = true
+
+    console.log('hCaptcha has been enabled.')
 }
+
 
 const app = express()
 const port =  process.env.PORT || 8989
 const saltRounds = 10;
+
+const serviceUrl = `${(process.env.SSL != "" ? "https" : "http")}://${process.env.HOSTNAME}${["80", "443"].includes(port) ? "" : ":" + port}/${process.env.WEB_PATH}`
 
 const sequelize = new Sequelize('sqlite::memory:') 
 
@@ -205,7 +210,7 @@ app.post('/api/upload', function (req, res) {
 
                 file.mv(process.cwd() + "/images/" + randomName + "." + fileEnding)
                 
-                urls.push("/i/" + randomName + "." + fileEnding)
+                urls.push("i/" + randomName + "." + fileEnding)
             }
         });
 
@@ -214,7 +219,7 @@ app.post('/api/upload', function (req, res) {
             const alerts = []
 
             urls.forEach(url => {
-                alerts.push({type: "positive", text: `Your image has been uploaded <a target="_blank" href="https://img.pastebin.fi${url}">https://img.pastebin.fi${url}</a>`})
+                alerts.push({type: "positive", text: `Your image has been uploaded <a target="_blank" href="${serviceUrl}${url}">${serviceUrl}${url}</a>`})
             });
 
             res.render('index', {
@@ -240,5 +245,5 @@ app.get('*', function(req, res) {
 //`${process.cwd()}/images/${files.fileInput.name}`
 
 app.listen(port, () => {
-  console.log(`BitGallery listening at http://localhost:${port}`)
+  console.log(`BitGallery listening at ${serviceUrl}`)
 })

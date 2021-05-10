@@ -21,7 +21,7 @@ Configure environment variables to `.env`-file. Please remember that this type o
 |PORT|Defines web server port (default: 8989)|no|
 |SSL|If not blank URLs start with https and not http (default: no)|no|
 |PORT|Used to build URLs for notifications (default: localhost)|yes|
-|PORT|Used to build URLs for notifications. In most cases this can be left blank. This is only required if ran behind reverse proxy with multiple services under same hostname (example.com/bitgallery and example.com/pastin).|no|
+|WEB_PATH|Used to build URLs for notifications. In most cases this can be left blank. This is only required if ran behind reverse proxy with multiple services under same hostname (example.com/bitgallery and example.com/pastin). Please include a slash at the end if filled. |no|
 
 Example config:
 
@@ -33,6 +33,8 @@ SSL=
 HOSTNAME=localhost
 PATH=
 ```
+
+You also have to make directory `images`.
 
 Finally you can install required dependencies and start the program.
 
