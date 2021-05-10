@@ -12,14 +12,31 @@ git clone https://github.com/kaikkitietokoneista/BitGallery.git
 cd BitGallery
 ```
 
-Configure environment variables to `.env`-file. ENV-variables:
+Configure environment variables to `.env`-file. Please remember that this type of setup is only for development purposes. For production please use Docker. Development setup ENV-variables:
 
 |Name |Value  | Required|
 --- | --- | ---
-|data1|data2|data3|
-|data11|data12|data13|
+|HCAPTCHA_SECRET_KEY|If leaved as blank no hCaptcha|no|
+|APP_SECRET|Set something unique|true|
+|PORT|Defines web server port (default: 8989)|no|
+|SSL|If not blank URLs start with https and not http (default: no)|no|
+|PORT|Used to build URLs for notifications (default: localhost)|yes|
+|PORT|Used to build URLs for notifications. In most cases this can be left blank. This is only required if ran behind reverse proxy with multiple services under same hostname (example.com/bitgallery and example.com/pastin).|no|
+
+Example config:
+
+```env
+HCAPTCHA_SECRET_KEY=
+APP_SECRET=keyboard cat
+PORT=
+SSL=
+HOSTNAME=localhost
+PATH=
+```
+
+Finally you can install required dependencies and start the program.
 
 ```
 npm install
-node app.js
+npm start
 ```
