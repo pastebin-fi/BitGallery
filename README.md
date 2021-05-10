@@ -31,7 +31,7 @@ APP_SECRET=keyboard cat
 PORT=
 SSL=
 HOSTNAME=localhost
-PATH=
+WEB_PATH=
 ```
 
 You also have to make directory `images`.
