@@ -17,7 +17,7 @@ Configure environment variables to `.env`-file. Please remember that this type o
 |Name |Value  | Required|
 --- | --- | ---
 |HCAPTCHA_SECRET_KEY|If leaved as blank no hCaptcha|no|
-|APP_SECRET|Set something unique|true|
+|APP_SECRET|Set something unique|yes|
 |PORT|Defines web server port (default: 8989)|no|
 |SSL|If not blank URLs start with https and not http (default: no)|no|
 |PORT|Used to build URLs for notifications (default: localhost)|yes|
