@@ -77,6 +77,24 @@ app.get('/register', function (req, res) {
     }
 });
 
+//TODO: fix sending the logout to people and logging them by that way out
+app.get('/logout', function (req, res) {
+    if (req.session.username) {
+        req.session.destroy(function(err) {
+            res.render('login', {
+                alerts: [
+                    {
+                        text: "You have been succesfully logged out. You can login below.",
+                        type: "positive"
+                    }
+                ]
+            });
+        })
+    } else {
+        res.redirect('/');
+    }
+});
+
 app.post('/login', async function (req, res) {
     if (req.session.username) {
         res.redirect('/');
@@ -93,7 +111,7 @@ app.post('/login', async function (req, res) {
                     alerts: [
                         {
                             text: "Invalid username or password.",
-                            type: "danger"
+                            type: "negative"
                         }
                     ]
                 });
@@ -121,7 +139,7 @@ app.post('/register', function (req, res) {
                                 alerts: [
                                     {
                                         text: "Your account has been created. You can login below.",
-                                        type: "success"
+                                        type: "positive"
                                     }
                                 ],
                                 hcaptcha: hcaptchaEnabled
@@ -134,7 +152,7 @@ app.post('/register', function (req, res) {
                         alerts: [
                             {
                                 text: "hCaptcha failed.",
-                                type: "warning"
+                                type: "information"
                             }
                         ],
                         hcaptcha: hcaptchaEnabled
@@ -145,7 +163,7 @@ app.post('/register', function (req, res) {
                     alerts: [
                         {
                             text: "hCaptcha failed.",
-                            type: "warning"
+                            type: "information"
                         }
                     ],
                     hcaptcha: hcaptchaEnabled
@@ -162,7 +180,7 @@ app.post('/register', function (req, res) {
                         alerts: [
                             {
                                 text: "Your account has been created. You can login below.",
-                                type: "success"
+                                type: "positive"
                             }
                         ]
                     });
@@ -196,7 +214,7 @@ app.post('/api/upload', function (req, res) {
             const alerts = []
 
             urls.forEach(url => {
-                alerts.push({type: "success", text: `Your image has been uploaded <a target="_blank" href="https://img.pastebin.fi${url}">https://img.pastebin.fi${url}</a>`})
+                alerts.push({type: "positive", text: `Your image has been uploaded <a target="_blank" href="https://img.pastebin.fi${url}">https://img.pastebin.fi${url}</a>`})
             });
 
             res.render('index', {
