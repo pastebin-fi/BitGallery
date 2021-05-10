@@ -11,5 +11,31 @@
     "randomstring": "^1.1.5",
     "sequelize": "^6.6.2",
     "sqlite3": "^5.0.2"
-  }
+  },
+  "name": "bitgallery",
+  "description": "Simple image sharing service.",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaikkitietokoneista/BitGallery.git"
+  },
+  "keywords": [
+    "BitGallery",
+    "Kaikkitietokoneista",
+    "Image",
+    "pastebin",
+    "Image",
+    "sharing"
+  ],
+  "author": "Kaikkitietokoneista",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/kaikkitietokoneista/BitGallery/issues"
+  },
+  "homepage": "https://github.com/kaikkitietokoneista/BitGallery#readme"
 }
