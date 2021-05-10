@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const randomstring = require("randomstring");
 const fileUpload = require('express-fileupload');
@@ -7,9 +8,17 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const session = require('express-session')
 const cors = require('cors');
-const {verify} = require('hcaptcha');
 
-const SECRET = process.env.HCAPTCHA_SECRET_KEY;
+let hcaptchaEnabled = false
+
+if (process.env.HCAPTCHA_SECRET_KEY != "") {
+    const {verify} = require('hcaptcha');
+
+    const SECRET = process.env.HCAPTCHA_SECRET_KEY;
+
+    hcaptchaEnabled = true
+}
+
 const app = express()
 const port =  process.env.PORT || 8989
 const saltRounds = 10;
@@ -62,7 +71,9 @@ app.get('/register', function (req, res) {
     if (req.session.username) {
         res.redirect('/');
     } else {
-        res.render('register');
+        res.render('register', {
+            hcaptcha: hcaptchaEnabled
+        });
     }
 });
 
@@ -96,44 +107,66 @@ app.post('/register', function (req, res) {
         res.redirect('/')
     } else { 
         console.log(req.body)
-        if (req["body"]["h-captcha-response"]) {
-            verify(SECRET, req["body"]["h-captcha-response"])
-            .then(() => {
-                bcrypt.genSalt(saltRounds, function(err, salt) {
-                    bcrypt.hash(req.body.password, salt, async function(err, hash) {
-                        await User.create({
-                            username: req.body.username,
-                            password: hash
-                        });
-                        res.render('login',  { 
-                            alerts: [
-                                {
-                                    text: "Your account has been created. You can login below.",
-                                    type: "success"
-                                }
-                            ]
+        if (hcaptchaEnabled) {
+            if (req["body"]["h-captcha-response"]) {
+                verify(SECRET, req["body"]["h-captcha-response"])
+                .then(() => {
+                    bcrypt.genSalt(saltRounds, function(err, salt) {
+                        bcrypt.hash(req.body.password, salt, async function(err, hash) {
+                            await User.create({
+                                username: req.body.username,
+                                password: hash
+                            });
+                            res.render('login',  { 
+                                alerts: [
+                                    {
+                                        text: "Your account has been created. You can login below.",
+                                        type: "success"
+                                    }
+                                ],
+                                hcaptcha: hcaptchaEnabled
+                            });
                         });
                     });
-                });        
-            })
-            .catch(() => {
+                })
+                .catch(() => {
+                    res.render('register',  { 
+                        alerts: [
+                            {
+                                text: "hCaptcha failed.",
+                                type: "warning"
+                            }
+                        ],
+                        hcaptcha: hcaptchaEnabled
+                    });
+                });
+            } else {
                 res.render('register',  { 
                     alerts: [
                         {
                             text: "hCaptcha failed.",
                             type: "warning"
                         }
-                    ]
+                    ],
+                    hcaptcha: hcaptchaEnabled
                 });
-            });
+            }
         } else {
-            res.render('register',  { 
-                alerts: [
-                    {
-                        text: "hCaptcha failed.",
-                        type: "warning"
-                    }
-                ]
+            bcrypt.genSalt(saltRounds, function(err, salt) {
+                bcrypt.hash(req.body.password, salt, async function(err, hash) {
+                    await User.create({
+                        username: req.body.username,
+                        password: hash
+                    });
+                    res.render('login',  { 
+                        alerts: [
+                            {
+                                text: "Your account has been created. You can login below.",
+                                type: "success"
+                            }
+                        ]
+                    });
+                });
             });
         }
     }
@@ -160,7 +193,7 @@ app.post('/api/upload', function (req, res) {
 
         if (req.query.info == "1") {
             //Use map
-            alerts = []
+            const alerts = []
 
             urls.forEach(url => {
                 alerts.push({type: "success", text: `Your image has been uploaded <a target="_blank" href="https://img.pastebin.fi${url}">https://img.pastebin.fi${url}</a>`})
